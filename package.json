@@ -1,0 +1,29 @@
+{
+  "name": "jsonmod",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "watch": "nodemon --watch ./",
+    "start": "node --inspect=5858 -r ts-node/register src/index.ts"
+  },
+  "dependencies": {
+    "commander": "^8.3.0",
+    "ramda": "^0.27.1"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.11",
+    "@types/ramda": "^0.27.59",
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.2"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      ".git",
+      "node_modules"
+    ],
+    "exec": "npm start",
+    "ext": "ts"
+  }
+}
