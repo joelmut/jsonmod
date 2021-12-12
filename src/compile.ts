@@ -1,17 +1,17 @@
 import path from "path";
+import { search } from "jmespath";
 import {
   pipe,
   mergeDeepWithKey,
-  set,
-  lensPath,
   clone,
-  path as rpath,
   isEmpty,
   is,
   isNil,
   not,
   trim,
   prop,
+  evolve,
+  map,
 } from "ramda";
 
 import type { Config } from "./config";
@@ -23,10 +23,61 @@ export function compile(config: Config, file: FileContent) {
     prop("imports"),
     imports(config),
     mergeDeepWithKey(concat, file.content),
-    convert
+    convert,
+    evolve({
+      config: {
+        [config.library.name]: {
+          imports: map(path.normalize),
+        },
+      },
+    })
   )(config);
 
   return compiled;
+}
+
+export function convert(value: any) {
+  const result = clone(value);
+
+  const inner = (acc: any) => {
+    if (isNil(acc) || isEmpty(acc)) return acc;
+
+    if (is(String, acc)) {
+      acc = acc
+        .split("||")
+        .map((e) => transform(result, e))
+        .find(pipe(isNil, not));
+    }
+
+    if (is(Array, acc)) {
+      for (let i = 0; i < acc.length; i++) {
+        acc[i] = inner(acc[i]);
+      }
+    }
+
+    if (is(Object, acc)) {
+      for (const key of Object.keys(acc)) {
+        acc[key] = inner(acc[key]);
+      }
+    }
+
+    return acc;
+  };
+
+  return inner(result);
+}
+
+export function transform(source: any, val: any) {
+  if (isNil(val) || isEmpty(val)) return val;
+
+  const [key, value] = val.split(":").map(trim);
+  const result = {
+    env: () => process.env[value],
+    ref: () => search(source, value),
+    default: () => key,
+  }[key];
+
+  return result ? result() : key;
 }
 
 export function imports(config: Config) {
@@ -51,7 +102,7 @@ export function paths(
     memory.add(filepath);
 
     const value = require(filepath);
-    let imports = value.config?.[config.library]?.imports;
+    let imports = value.config?.[config.library.name]?.imports;
 
     if (imports) {
       imports = imports
@@ -61,62 +112,11 @@ export function paths(
           return path.relative(config.file.dir, fullpath);
         })
         .filter((e) => !memory.has(path.resolve(config.file.dir, e)));
-      value.config[config.library].imports = imports;
+      value.config[config.library.name].imports = imports;
     }
 
     const innerPaths = paths(config, imports, memory);
 
     return [value, ...innerPaths];
   });
-}
-
-export function convert(value: any, keyPath = [], result = clone(value)) {
-  if (isNil(value) || isEmpty(value)) return value;
-
-  if (is(String, value)) {
-    return value
-      .split("|")
-      .map((val) => transform(result, val))
-      .find(pipe(isNil, not));
-  }
-
-  if (is(Array, value)) {
-    return value.map((e, i) => convert(e, keyPath, result));
-  }
-
-  if (is(Object, value)) {
-    const isArray = is(Array, rpath(keyPath, result));
-
-    const obj = {};
-
-    for (const [key, val] of Object.entries(value)) {
-      const fullkey = [...keyPath, key];
-      const converted = convert(val, fullkey, result);
-
-      if (isArray) {
-        obj[key] = converted;
-      } else {
-        result = set(lensPath(fullkey), converted, result);
-      }
-    }
-
-    if (!isEmpty(obj)) return obj;
-
-    return rpath(keyPath)(result);
-  }
-
-  return value;
-}
-
-export function transform(source: any, val: any) {
-  if (isNil(val) || isEmpty(val)) return val;
-
-  const [key, value] = val.split(":").map(trim);
-  const result = {
-    env: () => process.env[value],
-    ref: () => rpath(value.split("."), source),
-    default: () => key,
-  }[key];
-
-  return result ? result() : key;
 }

@@ -11,10 +11,9 @@ import {
   when,
 } from "ramda";
 import type { FileSpecs } from "./interfaces";
-import { name } from "../package.json";
 
 export let config = {
-  library: name,
+  library: { name: "jsonmod", version: "0.0.1" },
   command: "",
   file: {} as FileSpecs,
   backup: {} as FileSpecs,

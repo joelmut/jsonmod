@@ -1,17 +1,46 @@
 {
+  "private": true,
   "name": "jsonmod",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "Modular and customizable json file",
   "license": "MIT",
+  "keywords": [
+    "modular",
+    "json",
+    "configuration",
+    "cli",
+    "custom",
+    "variables",
+    "typescript"
+  ],
+  "author": "Joel Mut",
+  "bugs": {
+    "url": "https://github.com/joelmut/jsonmod/issues"
+  },
+  "homepage": "https://github.com/joelmut/jsonmod#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joelmut/jsonmod.git"
+  },
+  "main": "bin/index.js",
+  "types": "bin/index.d.ts",
+  "bin": {
+    "jsonmod": "bin/index.js"
+  },
   "scripts": {
+    "build": "tsc",
     "watch": "nodemon --watch ./",
-    "start": "node --inspect=5858 -r ts-node/register src/index.ts"
+    "node": "node --inspect=5858 -r ts-node/register src/index.ts",
+    "start": "npm run node -- --file package.json",
+    "sample": "npm run node -- --file tests/sample/parent/child/package.json"
   },
   "dependencies": {
     "commander": "^8.3.0",
+    "jmespath": "^0.15.0",
     "ramda": "^0.27.1"
   },
   "devDependencies": {
+    "@types/jmespath": "^0.15.0",
     "@types/node": "^16.11.11",
     "@types/ramda": "^0.27.59",
     "nodemon": "^2.0.15",

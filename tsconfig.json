@@ -2,10 +2,20 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
-  }
+    "resolveJsonModule": true,
+    "rootDir": "src",
+    "baseUrl": "src",
+    "outDir": "bin",
+    "types": ["node"]
+  },
+  "include": ["src/*.ts", "index.ts"],
+  "exclude": ["node_modules"]
 }
