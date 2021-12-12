@@ -1,6 +1,6 @@
 {
-  "private": true,
-  "name": "jsonmod",
+  "private": false,
+  "name": "@joelmut/jsonmod",
   "version": "0.0.1",
   "description": "Modular and customizable json file",
   "license": "MIT",
