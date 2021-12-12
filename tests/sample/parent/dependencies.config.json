@@ -1,0 +1,9 @@
+{
+  "version": "env:npm_config_node_version || 1.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "botbuilder": "^4.15.0",
+    "botbuilder-ai": "env:BOTBUILDER_VERSION | ref:dependencies.botbuilder | ^4.14.0"
+  },
+  "array": [{ "id": 2 }, { "id": 3 }, { "id": "ref:array[0].id" }]
+}

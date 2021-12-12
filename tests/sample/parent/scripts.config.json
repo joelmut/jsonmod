@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "test4": "test4"
+  },
+  "config": {
+    "jsonmod": {
+      "imports": [".\\dependencies.config.json", "../more.scripts.config.json"]
+    }
+  }
+}

@@ -2,4 +2,4 @@
 - [ ] Add README
   - [ ] Explain how to use it
 - [ ] Add unit tests
-- [ ] Add sample
+- [x] Add sample

@@ -1,0 +1,20 @@
+{
+  "author": "env:testing || ref:testing || ref:name",
+  "name": "test",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [],
+  "config": {
+    "jsonmod": {
+      "command": "npm install",
+      "backup": "{file}.ext.json",
+      "imports": [
+        "../dependencies.config.json",
+        "../devdependencies.config.json"
+      ]
+    }
+  }
+}

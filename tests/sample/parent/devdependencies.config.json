@@ -1,0 +1,11 @@
+{
+  "version": "env:npm_config_node_version || 2.0.0",
+  "devDependencies": {
+    "dotenv": "env:DOTENV_VERSION || ^10.0.0"
+  },
+  "config": {
+    "jsonmod": {
+      "imports": ["./scripts.config.json"]
+    }
+  }
+}
